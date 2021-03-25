@@ -40,14 +40,13 @@
             }
         }
     }
-    // function LogOut($conn){
-    //     $conn->EndSession();
-    //     header("Refresh: 0 url=index.php");
-    // }
+    function CheckSession(){
+        return (isset($_SESSION['login'])) ? true : false;
+    }
     function Login($username, $password, $conn){
         $newpassword = md5($password);
-        $CheckName = $conn->SearchData("personnel", "tentaikhoan", "\"$username\"");
-        $CheckPass = $conn->SearchData("personnel", "matkhau", "\"$newpassword\"");
+        $CheckName = $conn->SearchSessionData("personnel", "tentaikhoan", "\"$username\"");
+        $CheckPass = $conn->SearchSessionData("personnel", "matkhau", "\"$newpassword\"");
         if(!$CheckName && $CheckPass){
             return AlertText("error-login__username");
         }
@@ -64,25 +63,31 @@
         }
         return AlertText("success-login");
     }
-    
+    if(isset($_GET['login'])){
+        if(!CheckSession()){
+        $login = $_GET['login'];
+        if($login == "loging")
+        require_once('./views/admin/login.php');
+        }else header("location: index.php");
+    }
     if(isset($_POST['login_submit'])){
         $username = $_POST['username'];
-        $password = $_POST['password'];
-       
+        $password = $_POST['password'];    
         $checkLG = Login($username, $password, $conn);
         $alertText = $checkLG;
     }
   
-    if(isset($_POST['logout'])){
+    if(isset($_GET['logout'])){
         session_unset();
         session_destroy();
         header("Refresh: 0 url=index.php");
     }
     if(isset($_SESSION['login'])){
         // $DataUser = $conn->GetData("personnel");
-        $DataUser = $conn->SearchData("personnel", "tentaikhoan", "\"{$_SESSION['login']}\"")[0];
-        // var_dump($DataUser);
+        $DataUser = $conn->SearchSessionData("personnel", "tentaikhoan", "\"{$_SESSION['login']}\"")[0];
         require_once("./views/index.php");
     }
-    else require_once("./views/admin/login.php");
+    else if(!isset($_GET['login']) && !isset($_SESSION['login'])) {
+        require_once("./views/index.php");
+    }
 ?>

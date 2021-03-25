@@ -77,7 +77,7 @@
             $sql = "DELETE FROM $tablename WHERE id=$id";
             return $this->Execute($sql);
         }
-        public function SearchData($tablename, $keymain, $keydata){
+        public function SearchSessionData($tablename, $keymain, $keydata){
             $sql = "SELECT * FROM $tablename WHERE $keymain = $keydata";
             $resultSQL = $this->Execute($sql);
             if(!$resultSQL)

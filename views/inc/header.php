@@ -17,12 +17,15 @@
     <div class="row-container">
         <nav>
             <div class="logo"><h1>Admin <?php
-                    echo ": {$DataUser['tentaikhoan']}";
+                    echo  CheckSession() ? ": {$DataUser['tentaikhoan']}" : "Login";
               ?></h1></div>
             <div class="list">
-                <form action="index.php" method="POST">
-                    <button class="button" name="login" id="signup">Login</button>
-                    <button class="button" name="logout" id="logout">Logout</button>
+                <form action="index.php" method="GET">
+                    <?php
+                    echo CheckSession() ? "" : '<a href="index.php" id="signup">Resigter</a>'; 
+                    echo CheckSession() ? '<button class="button" name="logout" id="signup">Logout</button>' : 
+                    '<a href="index.php?login=loging" id="login">Login</a>'
+                    ?>
                 </form>
                 
                 <!-- <a id="signup" >Sign up</a>
